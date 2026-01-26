@@ -1,0 +1,20 @@
+.{
+    .name = .usrl_lsp,
+    .version = "0.0.0",
+    .fingerprint = 0xc08eca14b4cf56f2,
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        // .usrl = .{
+        //     .url = "git+https://github.com/DanielKMach/USRL#3e4102a41afec7149fb62481b298596280e038bd",
+        //     .hash = "usrl-1.0.1-WmoIjFEcBgDTYEidJ1duPu8ydkvyMp_vv5v7lQanXsOK",
+        // },
+        .usrl = .{
+            .path = "../USRL",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "server",
+    },
+}
