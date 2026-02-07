@@ -13,18 +13,24 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
 
-    const mod = b.addModule("ulsp", .{
+    const lsp = b.dependency("lsp_kit", .{
+        .optimize = optimize,
+        .target = target,
+    });
+
+    const mod = b.addModule("uls", .{
         .root_source_file = b.path("server/main.zig"),
         .target = target,
         .optimize = optimize,
         .imports = &.{
             .{ .name = "usrl", .module = usrl.module("usrl") },
+            .{ .name = "lsp", .module = lsp.module("lsp") },
         },
     });
 
     // Installing
     const exe = b.addExecutable(.{
-        .name = "ulsp",
+        .name = "uls",
         .root_module = mod,
     });
 

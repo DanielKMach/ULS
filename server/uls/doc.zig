@@ -1,121 +1,46 @@
 const std = @import("std");
+const lsp = @import("lsp");
 const usrl = @import("usrl");
 const ULS = @import("../ULS.zig");
 
-pub const DidOpenTextDocumentNotification = struct {
-    pub const method = "textDocument/didOpen";
+pub fn @"textDocument/didOpen"(
+    uls: *ULS,
+    _: std.mem.Allocator,
+    params: lsp.types.DidOpenTextDocumentParams,
+) std.mem.Allocator.Error!void {
+    const key = try uls.allocator.dupe(u8, params.textDocument.uri);
+    errdefer uls.allocator.free(key);
+    const value = try uls.allocator.dupe(u8, params.textDocument.text);
+    errdefer uls.allocator.free(value);
 
-    params: struct {
-        textDocument: TextDocumentItem,
-    },
+    try uls.docs.put(key, value);
+    ULS.log.info("Added document {s}", .{std.fs.path.basename(key)});
+}
 
-    pub fn handle(uls: *ULS, request: @This(), _: std.mem.Allocator) ULS.Error!void {
-        const item = request.params.textDocument;
-        const content = try uls.allocator.dupe(u8, item.text);
-        errdefer uls.allocator.free(content);
-
-        try uls.docs.put(
-            item.uri,
-            .{ .version = item.version, .content = content },
-        );
-        ULS.log.info("Added document {s}", .{item.uri});
+pub fn @"textDocument/didClose"(
+    uls: *ULS,
+    _: std.mem.Allocator,
+    params: lsp.types.DidCloseTextDocumentParams,
+) void {
+    const doc = params.textDocument;
+    if (uls.docs.fetchRemove(doc.uri)) |kv| {
+        uls.allocator.free(kv.key);
+        uls.allocator.free(kv.value);
+        ULS.log.info("Removed document {s}", .{std.fs.path.basename(doc.uri)});
     }
-};
+}
 
-pub const DidCloseTextDocumentNotification = struct {
-    pub const method = "textDocument/didClose";
+pub fn @"textDocument/didChange"(
+    uls: *ULS,
+    _: std.mem.Allocator,
+    params: lsp.types.DidChangeTextDocumentParams,
+) std.mem.Allocator.Error!void {
+    const doc = params.textDocument;
+    for (params.contentChanges) |change| {
+        std.debug.assert(change == .literal_1);
 
-    params: struct {
-        textDocument: TextDocumentIdentifier,
-    },
-
-    pub fn handle(uls: *ULS, request: @This(), _: std.mem.Allocator) ULS.Error!void {
-        const id = request.params.textDocument;
-        if (uls.docs.fetchRemove(id.uri)) |kv| {
-            uls.allocator.free(kv.value.content);
-            ULS.log.info("Removed document {s}", .{id.uri});
-        }
+        const new = try uls.allocator.dupe(u8, change.literal_1.text);
+        const old = try uls.docs.fetchPut(doc.uri, new) orelse continue;
+        uls.allocator.free(old.value);
     }
-};
-
-pub const DidChangeTextDocumentNotification = struct {
-    pub const method = "textDocument/didChange";
-
-    params: struct {
-        textDocument: VersionedTextDocumentIdentifier,
-        contentChanges: []const TextDocumentContentChangeEvent,
-    },
-
-    pub fn handle(uls: *ULS, request: @This(), _: std.mem.Allocator) ULS.Error!void {
-        const id = request.params.textDocument;
-        const changes = request.params.contentChanges;
-        const doc = uls.docs.getPtr(id.uri) orelse return;
-        if (doc.version >= id.version) return;
-
-        for (changes) |change| {
-            const new = try uls.allocator.dupe(u8, change.text);
-            const old = doc.content;
-
-            doc.content = new;
-            uls.allocator.free(old);
-        }
-        ULS.log.info("Updated document {s}", .{id.uri});
-    }
-};
-
-pub const TextDocumentItem = struct {
-    uri: []const u8,
-    languageId: []const u8,
-    version: isize,
-    text: []const u8,
-};
-
-pub const TextDocumentIdentifier = struct {
-    uri: []const u8,
-};
-
-pub const VersionedTextDocumentIdentifier = struct {
-    uri: []const u8,
-    version: isize, // why tf do they keep using signed integers
-};
-
-// tecnically this should be a union with some other stuff
-// but since the sync kind is 1 (full) we only need this
-pub const TextDocumentContentChangeEvent = struct {
-    text: []const u8,
-};
-
-pub const Range = struct {
-    start: Position, // inclusive
-    end: Position, // exclusive
-
-    pub fn fromIndex(from: usize, to: usize, text: []const u8) !@This() {
-        std.debug.assert(from < to);
-        return .{
-            .start = try .fromIndex(from, text),
-            .end = try .fromIndex(to, text),
-        };
-    }
-
-    pub fn fromLoc(loc: usrl.Token.Location, text: []const u8) !@This() {
-        return .{
-            .start = try .fromIndex(loc.index, text),
-            .end = try .fromIndex(loc.index + loc.len, text),
-        };
-    }
-};
-
-pub const Position = struct {
-    line: usize, // zero-based
-    character: usize, // zero-based
-
-    pub fn fromIndex(index: usize, text: []const u8) !@This() {
-        const line_start = if (std.mem.lastIndexOfScalar(u8, text[0..index], '\n')) |line| line + 1 else 0;
-        const line_count = std.mem.count(u8, text[0..line_start], "\n");
-
-        return .{
-            .line = line_count,
-            .character = text[line_start..index].len,
-        };
-    }
-};
+}

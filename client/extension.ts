@@ -8,17 +8,15 @@ import {
 	StreamInfo,
 } from 'vscode-languageclient/node';
 
-const id = "usrlLanguageServer";
-const run_query_command = `${id}.runQuery`;
+const id = "usrl";
 
 let client: LanguageClient;
-let output: vscode.OutputChannel;
 
 export function activate(context: vscode.ExtensionContext) {
 	const serverOpts = () => {
 		const path = (platform == 'win32')
-			? `${__dirname}\\bin\\ulsp.exe`
-			: `${__dirname}/bin/ulsp`;
+			? `${__dirname}\\bin\\uls.exe`
+			: `${__dirname}/bin/uls`;
 
 		const server = spawn(path);
 		const stream: StreamInfo = {
@@ -26,17 +24,18 @@ export function activate(context: vscode.ExtensionContext) {
 			writer: server.stdin,
 		};
 
-		output = output || vscode.window.createOutputChannel("USRL Language Server", id);
-		output.appendLine("\r\n=== CONNECTED TO ULS ===");
+		client.outputChannel.appendLine("\r\n=== CONNECTED TO ULS ===");
 		server.stderr.on('data', chunk => {
-			output.append(chunk.toString());
+			client.outputChannel.append(chunk.toString());
 		})
 
 		return Promise.resolve(stream);
 	}
 
 	const clientOpts: LanguageClientOptions = {
-		documentSelector: [{ scheme: 'file', pattern: '**/*.usrl' }],
+		outputChannelName: "USRL Language Server",
+		outputChannel: vscode.window.createOutputChannel("USRL Language Server"),
+		documentSelector: [{ language: 'usrl' }],
 	};
 
 	client = new LanguageClient(
@@ -54,10 +53,29 @@ export function deactivate(): Thenable<void> | undefined {
 	return client.stop();
 }
 
-vscode.commands.registerCommand(run_query_command, query => {
+vscode.commands.registerCommand(`${id}.runQuery`, query => {
 	const terminal = vscode.window.terminals.find(t => t.name == "USRL")
 		|| vscode.window.createTerminal('USRL');
 
+	const exe = vscode.workspace.getConfiguration(id).get<string>("preferredExecutable") || 'usrl';
+
+	terminal.sendText(`${escapeExePS(exe)} ${escapeArgPS(query)}`, true);
 	terminal.show();
-	terminal.sendText(`usrl "${query}"`, true);
 });
+
+vscode.commands.registerCommand(`${id}.openManual`, () => {
+	vscode.env.openExternal(vscode.Uri.parse("https://danielkmach.github.io/USRL"));
+})
+
+vscode.commands.registerCommand(`${id}.restartLanguageServer`, () => {
+	client.restart();
+})
+
+function escapeArgPS(arg: string) {
+	return '"' + arg.replaceAll('$', '`$').replaceAll('"', '`"') + '"';
+}
+
+function escapeExePS(exe: string) {
+	if (exe.includes(' ')) return `&${escapeArgPS(exe)}`;
+	return exe;
+}

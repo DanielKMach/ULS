@@ -1,0 +1,54 @@
+{
+  "scopeName": "source.usrl",
+  "patterns": [
+    {
+      "name": "keyword.control",
+      "match": "(?i)\\b(SHOW|RENAME|EVAL|OF|IN|WHERE|DIRECT|INDIRECT|USES|REFS|FOR)\\b"
+    },
+    {
+      "name": "keyword.operator",
+      "match": "(?i)\\b(OR|AND|NOT)\\b|\\+|-|\\*|\\/|==|!=|<=|>=|:=|="
+    },
+    {
+      "name": "variable.other",
+      "match": "\\$[a-zA-Z_]+",
+      "captures": {
+        "0": {
+          "patterns": [
+            {
+              "include": "#func"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "constant.language",
+      "match": "(?i)\\bNIL\\b"
+    },
+    {
+      "name": "constant.numeric",
+      "match": "\\d+(\\.\\d+)?"
+    },
+    {
+      "name": "string.quoted.double",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single",
+      "begin": "'",
+      "end": "'"
+    },
+    {
+      "name": "comment.line.number-sign",
+      "match": "#.*$"
+    }
+  ],
+  "repository": {
+    "func": {
+      "name": "support.function",
+      "match": "\\$(min|max|floor|ceil|trunc|round|sqrt|abs|sin|cos|prop|len|idx|lastIdx|addList|addObj|push|pop|slice|str|num|ctx)\\b"
+    }
+  }
+}

@@ -1,102 +1,56 @@
 const std = @import("std");
+const lsp = @import("lsp");
+const usrl = @import("usrl");
 const ULS = @import("../ULS.zig");
-const doc = @import("doc.zig");
+// const doc = @import("doc.zig");
 
-pub const CodeLensRequest = struct {
-    pub const method = "textDocument/codeLens";
+pub fn @"textDocument/codeLens"(
+    uls: ULS,
+    allocator: std.mem.Allocator,
+    params: lsp.types.CodeLensParams,
+) ULS.Error!?[]const lsp.types.CodeLens {
+    const document = uls.docs.get(params.textDocument.uri) orelse return error.InvalidParams;
+    var tokenizer = usrl.Tokenizer.init(document);
+    var diag = usrl.ParseDiagnostics.init(allocator);
+    defer diag.deinit();
 
-    id: isize,
-    params: struct {
-        textDocument: doc.TextDocumentIdentifier,
-    },
+    var lenses = std.ArrayList(lsp.types.CodeLens).empty;
+    defer lenses.deinit(allocator);
 
-    pub fn handle(uls: *ULS, request: @This(), allocator: std.mem.Allocator) ULS.Error!Response {
-        const query = (uls.docs.get(request.params.textDocument.uri) orelse {
-            return error.DocumentNotFound;
-        }).content;
-
-        var lenses = std.ArrayList(CodeLens([]const u8)).empty;
-        defer lenses.deinit(allocator);
-
-        var parsing = false;
-        var indent: usize = 0;
-        var starti: usize = 0;
-        var start: doc.Position = .{ .line = 0, .character = 0 };
-        var pos: doc.Position = .{ .line = 0, .character = 0 };
-        var iterator = std.unicode.Utf8Iterator{ .bytes = query, .i = 0 };
-        while (iterator.nextCodepoint()) |cp| {
-            defer if (cp == '\n') {
-                pos.line += 1;
-                pos.character = 0;
-            } else {
-                pos.character += 1;
-            };
-
-            if (!parsing) {
-                if (cp < 128 and std.ascii.isWhitespace(@intCast(cp)))
-                    continue;
-                const cp_len = std.unicode.utf8CodepointSequenceLength(cp) catch unreachable;
-                starti = iterator.i - cp_len;
-                start = pos;
+    var parsing = false;
+    var start: usize = 0;
+    var indent: isize = 0;
+    while (tokenizer.token(&diag)) |result| {
+        const tkn = result orelse break;
+        switch (tkn.value) {
+            .SHOW, .RENAME, .EVAL => {
+                if (parsing) continue;
+                start = tkn.loc.index;
                 parsing = true;
-            }
-
-            switch (cp) {
-                '{' => indent += 1,
-                '}' => indent -= @min(indent, 1),
-                ';' => {
-                    if (!parsing or indent != 0) continue;
-                    const args = try allocator.alloc([]u8, 1);
-                    args[0] = try allocator.dupe(u8, query[starti..iterator.i]);
-                    try lenses.append(allocator, .{
-                        .range = .{ .start = start, .end = pos },
-                        .command = .{
-                            .title = "Run Query",
-                            .command = "usrlLanguageServer.runQuery",
-                            .arguments = args,
-                        },
-                    });
-                    parsing = false;
-                },
-                else => continue,
-            }
+            },
+            .semicolon, .eof => {
+                if (!parsing or indent != 0) continue;
+                const pos = tkn.loc.index + tkn.loc.len;
+                const args = try allocator.alloc(lsp.types.LSPAny, 1);
+                args[0] = .{ .string = try allocator.dupe(u8, document[start..pos]) };
+                try lenses.append(allocator, .{
+                    .range = .{
+                        .start = lsp.offsets.indexToPosition(document, start, uls.encoding),
+                        .end = lsp.offsets.indexToPosition(document, pos, uls.encoding),
+                    },
+                    .command = .{
+                        .title = "Run Query",
+                        .command = "usrl.runQuery",
+                        .arguments = args,
+                    },
+                });
+                parsing = false;
+            },
+            .left_brace => indent += 1,
+            .right_brace => indent -= 1,
+            else => {},
         }
-        if (parsing) {
-            const args = try allocator.alloc([]u8, 1);
-            args[0] = try allocator.dupe(u8, query[starti..iterator.i]);
-            try lenses.append(allocator, .{
-                .range = .{ .start = start, .end = pos },
-                .command = .{
-                    .title = "Run Query",
-                    .command = "usrlLanguageServer.runQuery",
-                    .arguments = args,
-                },
-            });
-        }
+    } else |_| {}
 
-        return .{
-            .id = request.id,
-            .result = try lenses.toOwnedSlice(allocator),
-        };
-    }
-
-    pub const Response = struct {
-        id: isize,
-        result: []const CodeLens([]const u8),
-    };
-};
-
-pub fn CodeLens(comptime T: type) type {
-    return struct {
-        range: doc.Range,
-        command: ?Command(T) = null,
-    };
-}
-
-pub fn Command(comptime T: type) type {
-    return struct {
-        title: []const u8,
-        command: []const u8,
-        arguments: ?[]const T = null,
-    };
+    return try lenses.toOwnedSlice(allocator);
 }

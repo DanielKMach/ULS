@@ -1,0 +1,86 @@
+scopeName: source.usrl
+patterns:
+- include: '#keyword'
+- include: '#operator'
+- include: '#variable'
+- include: '#nil'
+- include: '#number'
+- include: '#double-string'
+- include: '#single-string'
+repository:
+  keyword:
+    name: keyword.control
+    match: (?i)\b
+      (SHOW
+      |RENAME
+      |EVAL
+      |OF
+      |IN
+      |WHERE
+      |DIRECT
+      |INDIRECT
+      |USES
+      |REFS
+      |FOR
+      )\b
+  operator:
+    name: keyword.operator
+    match: (?i)\b
+      (OR
+      |AND
+      |NOT)\b
+      |\+
+      |-
+      |\*
+      |\/
+      |==
+      |!=
+      |<=
+      |>=
+      |:=
+      |=
+  func:
+    name: support.function
+    match: \$
+      (min
+      |max
+      |floor
+      |ceil
+      |trunc
+      |round
+      |sqrt
+      |abs
+      |sin
+      |cos
+      |prop
+      |len
+      |idx
+      |lastIdx
+      |addList
+      |addObj
+      |push
+      |pop
+      |slice
+      |str
+      |num
+      |ctx
+      )\b/i
+  variable:
+    name: variable.other
+    match: \$[a-zA-Z_]+
+    captures:
+      '0':
+        patterns: 
+        - include: '#func'
+  nil:
+    name: constant.language
+    match: (?i)\bNIL\b
+  number:
+    name: constant.numeric
+    match: '\d+(\.\d+)?'
+  double-string:
+    name: string.quoted.double
+    match: '".*?"'
+  single-string:
+    name: string.quoted.single
+    match: "'.*?'"
