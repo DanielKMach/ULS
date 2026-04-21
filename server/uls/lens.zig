@@ -11,7 +11,7 @@ pub fn @"textDocument/codeLens"(
 ) ULS.Error!?[]const lsp.types.CodeLens {
     const document = uls.docs.get(params.textDocument.uri) orelse return error.InvalidParams;
     var tokenizer = usrl.Tokenizer.init(document);
-    var diag = usrl.ParseDiagnostics.init(allocator);
+    var diag = usrl.TokenizeDiagnostics.init(allocator);
     defer diag.deinit();
 
     var lenses = std.ArrayList(lsp.types.CodeLens).empty;
@@ -20,8 +20,10 @@ pub fn @"textDocument/codeLens"(
     var parsing = false;
     var start: usize = 0;
     var indent: isize = 0;
-    while (tokenizer.token(&diag)) |result| {
+    while (tokenizer.token(allocator, &diag)) |result| {
         const tkn = result orelse break;
+        defer usrl.Token.cleanup(allocator, &.{tkn});
+
         switch (tkn.value) {
             .SHOW, .RENAME, .EVAL => {
                 if (parsing) continue;

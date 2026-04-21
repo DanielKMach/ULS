@@ -10,16 +10,19 @@ pub fn @"textDocument/semanticTokens/full"(
     params: lsp.types.SemanticTokensParams,
 ) ULS.Error!?lsp.types.SemanticTokens {
     const document = uls.docs.get(params.textDocument.uri) orelse return error.InvalidParams;
-    var tokenizer = usrl.Tokenizer.init(document);
-    var diag = usrl.ParseDiagnostics.init(allocator);
+
+    var tokenizer: usrl.Tokenizer = .init(document);
+    var diag: usrl.TokenizeDiagnostics = .init(allocator);
     defer diag.deinit();
 
     var encoded = std.ArrayList(u32).empty;
     defer encoded.deinit(allocator);
 
     var last = std.mem.zeroes(lsp.types.Position);
-    while (tokenizer.token(&diag)) |result| {
+    while (tokenizer.token(allocator, &diag)) |result| {
         const tkn = result orelse break;
+        defer usrl.Token.cleanup(allocator, &.{tkn});
+
         const tid = tokenToType(tkn) orelse continue;
         const range = ULS.locToRange(document, tkn.loc, uls.encoding);
         const len = lsp.offsets.rangeLength(document, range, uls.encoding);

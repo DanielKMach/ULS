@@ -11,11 +11,13 @@ pub fn @"textDocument/hover"(
     const document = uls.docs.get(params.textDocument.uri) orelse return error.InvalidParams;
     const index = lsp.offsets.positionToIndex(document, params.position, uls.encoding);
     var tokenizer = usrl.Tokenizer.init(document);
-    var diag = usrl.ParseDiagnostics.init(allocator);
+    var diag = usrl.TokenizeDiagnostics.init(allocator);
     defer diag.deinit();
 
-    while (tokenizer.token(&diag)) |result| {
+    while (tokenizer.token(allocator, &diag)) |result| {
         const tkn = result orelse break;
+        defer usrl.Token.cleanup(allocator, &.{tkn});
+
         if (tkn.value != .variable) continue;
         if (index < tkn.loc.index or index > tkn.loc.index + tkn.loc.len) continue;
         return .{
@@ -277,5 +279,42 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$ctx().velocidade == velocidade,
         \\$ctx().vida == vida
         \\```
+    },
+    .{
+        "fileId",
+        \\```usrl
+        \\$fileId(ref)
+        \\```
+        \\
+        \\Retorna o file id do valor referência como um valor numérico.
+    },
+    .{
+        "guid",
+        \\```usrl
+        \\$guid(ref)
+        \\```
+        \\
+        \\Retorna o GUID do valor referência como uma string.
+    },
+    .{
+        "guidOf",
+        \\```usrl
+        \\$guidOf(path)
+        \\```
+        \\
+        \\Busca e retorna o GUID do asset em `path`, relativo à raiz do projeto.
+        \\
+        \\```usrl
+        \\$guidOf("./Assets/Prefabs/Player.prefab") == "algum guid"
+        \\```
+    },
+    .{
+        "assert",
+        \\```usrl
+        \\$assert(condition)
+        \\```
+        \\
+        \\Assume que `condition` é verdadeiro e retorna seu valor.
+        \\Caso contrário, interrompe a execução da consulta levantando um erro de asserção.
     },
 });

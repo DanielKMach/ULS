@@ -48,7 +48,7 @@
   "repository": {
     "func": {
       "name": "support.function",
-      "match": "\\$(min|max|floor|ceil|trunc|round|sqrt|abs|sin|cos|prop|len|idx|lastIdx|addList|addObj|push|pop|slice|str|num|ctx)\\b"
+      "match": "\\$(min|max|floor|ceil|trunc|round|sqrt|abs|sin|cos|prop|len|idx|lastIdx|addList|addObj|push|pop|slice|str|num|ctx|fileId|guid|guidOf|assert)\\b"
     }
   }
 }
