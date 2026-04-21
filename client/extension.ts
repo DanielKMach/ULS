@@ -54,13 +54,27 @@ export function deactivate(): Thenable<void> | undefined {
 }
 
 vscode.commands.registerCommand(`${id}.runQuery`, query => {
-	const terminal = vscode.window.terminals.find(t => t.name == "USRL")
+	const term = vscode.window.terminals.find(t => t.name == "USRL")
 		|| vscode.window.createTerminal('USRL');
 
 	const exe = vscode.workspace.getConfiguration(id).get<string>("preferredExecutable") || 'usrl';
 
-	terminal.sendText(`${escapeExePS(exe)} ${escapeArgPS(query)}`, true);
-	terminal.show();
+	switch (term.state.shell) {
+		case 'pwsh':
+			term.sendText(escapePS(exe, query), true);
+			break;
+
+		case 'cmd':
+			term.sendText(escapeCmd(exe, query), true);
+			break;
+
+		case 'bash':
+		case 'gitbash':
+		default:
+			term.sendText(escapeBash(exe, query), true);
+			break;
+	}
+	term.show();
 });
 
 vscode.commands.registerCommand(`${id}.openManual`, () => {
@@ -71,11 +85,31 @@ vscode.commands.registerCommand(`${id}.restartLanguageServer`, () => {
 	client.restart();
 })
 
-function escapeArgPS(arg: string) {
-	return '"' + arg.replaceAll('$', '`$').replaceAll('"', '`"') + '"';
+function escapePS(...args: string[]): string {
+	const escape = (arg: string) => {
+		if (/^[a-zA-Z0-9_\-./]+$/.test(arg)) return arg;
+		return '"' + arg.replaceAll('$', '`$').replaceAll('"', '`"') + '"';
+	}
+
+	return args
+		.map((v, i) => i == 0 ? '&' + escape(v) : escape(v))
+		.join(' ');
 }
 
-function escapeExePS(exe: string) {
-	if (exe.includes(' ')) return `&${escapeArgPS(exe)}`;
-	return exe;
+function escapeCmd(...args: string[]): string {
+	const escape = (arg: string) => {
+		if (/^[a-zA-Z0-9_\-./]+$/.test(arg)) return arg;
+		return '"' + arg.replaceAll('"', '""').replaceAll('\n', '\n ^') + '"';
+	}
+
+	return args.map(escape).join(' ');
+}
+
+function escapeBash(...args: string[]): string {
+	const escape = (arg: string) => {
+		if (/^[a-zA-Z0-9_\-./]+$/.test(arg)) return arg;
+		return '"' + arg.replaceAll('"', '\\"').replaceAll('$', '\\$') + '"';
+	}
+
+	return args.map(escape).join(' ');
 }

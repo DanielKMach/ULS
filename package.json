@@ -44,12 +44,7 @@
 			"type": "object",
 			"title": "USRL",
 			"properties": {
-				"codeLens": {
-					"type": "boolean",
-					"description": "Enables/Disables code lens (Run Query).",
-					"default": true
-				},
-				"preferredExecutable": {
+				"usrl.preferredExecutable": {
 					"type": "string",
 					"description": "Sets the executable to be used when running a query. Defaults to `usrl` when empty.",
 					"default": "usrl"
