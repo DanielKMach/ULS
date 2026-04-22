@@ -1,6 +1,7 @@
 {
 	"name": "usrl",
 	"description": "The official USRL extension",
+	"icon": "./client/icon.png",
 	"version": "0.1.0",
 	"author": "DanielKMach",
 	"publisher": "danielkmach",
