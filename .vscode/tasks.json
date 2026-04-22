@@ -14,7 +14,7 @@
 			"type": "shell",
 			"command": [
 				"cp",
-				"./zig-out/bin/*.exe",
+				"./zig-out/bin/*",
 				"./out/bin/"
 			],
 			"dependsOn": [

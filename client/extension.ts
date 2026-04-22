@@ -14,11 +14,13 @@ let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
 	const serverOpts = () => {
-		const path = (platform == 'win32')
-			? `${__dirname}\\bin\\uls.exe`
-			: `${__dirname}/bin/uls`;
+		let exe: string;
+		if (platform == 'win32') exe = 'uls-windows.exe';
+		else if (platform == 'darwin') exe = 'uls-macos';
+		else if (platform == 'linux') exe = 'uls-linux';
+		else throw new Error("Unsupported platform");
 
-		const server = spawn(path);
+		const server = spawn(`${__dirname}/bin/${exe}`);
 		const stream: StreamInfo = {
 			reader: server.stdout,
 			writer: server.stdin,
