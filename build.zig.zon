@@ -4,16 +4,13 @@
     .fingerprint = 0xc08eca14b4cf56f2,
     .minimum_zig_version = "0.15.1",
     .dependencies = .{
-        // .usrl = .{
-        //     .url = "git+https://github.com/DanielKMach/USRL#3e4102a41afec7149fb62481b298596280e038bd",
-        //     .hash = "usrl-1.0.1-WmoIjFEcBgDTYEidJ1duPu8ydkvyMp_vv5v7lQanXsOK",
-        // },
-        .usrl = .{
-            .path = "../USRL",
-        },
         .lsp_kit = .{
             .url = "git+https://github.com/zigtools/lsp-kit.git?ref=0.15.x#421ae644f53bd788e3699b5fc22b3e07b161e2b6",
             .hash = "lsp_kit-0.1.0-bi_PL5wxCgB1_jRIZtcodh-x-_nteVzuOrul2ken-ZLE",
+        },
+        .usrl = .{
+            .url = "git+https://github.com/DanielKMach/USRL#95349e3f1b9d2a8539f29a4d4902e4f321bda9a2",
+            .hash = "usrl-1.0.1-WmoIjDW5BQBcZcdIMOW3YaqzIvWUuVfpRZGnPAUq1wuS",
         },
     },
     .paths = .{
