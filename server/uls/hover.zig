@@ -41,7 +41,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$min(x, y)
         \\```
         \\
-        \\Aceita dois argumentos numéricos e retorna o de menor valor. Equivalente a `$x < $y ? $x : $y`.
+        \\Accepts two numeric arguments and returns the smaller one. Equivalent to `$x < $y ? $x : $y`.
     },
     .{
         "max",
@@ -49,7 +49,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$max(x, y)
         \\```
         \\
-        \\Aceita dois argumentos numéricos e retorna o de maior valor. Equivalente a `$x > $y ? $x : $y`.
+        \\Accepts two numeric arguments and returns the larger one. Equivalent to `$x > $y ? $x : $y`.
     },
     .{
         "floor",
@@ -57,7 +57,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$floor(x)
         \\```
         \\
-        \\Remove a parte fracionária do argumento numérico, arredondando para baixo.
+        \\Removes the fractional part of the numeric argument by rounding down.
     },
     .{
         "ceil",
@@ -65,7 +65,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$ceil(x)
         \\```
         \\
-        \\Remove a parte fracionária do argumento numérico, arredondando para cima.
+        \\Removes the fractional part of `x` by rounding up.
     },
     .{
         "trunc",
@@ -73,7 +73,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$trunc(x)
         \\```
         \\
-        \\Remove a parte fracionária do argumento numérico, arredondando em direção ao zero.
+        \\Removes the fractional part of the numeric argument by rounding toward zero.
     },
 
     .{
@@ -82,7 +82,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$round(x)
         \\```
         \\
-        \\Remove a parte fracionária do argumento numérico, arredondando para o valor inteiro mais próximo.
+        \\Removes the fractional part of the numeric argument by rounding to the nearest integer.
     },
     .{
         "sqrt",
@@ -90,7 +90,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$sqrt(x)
         \\```
         \\
-        \\Retorna a raiz quadrada do argumento numérico.
+        \\Returns the square root of the numeric argument.
     },
     .{
         "abs",
@@ -98,7 +98,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$abs(x)
         \\```
         \\
-        \\Retorna o valor absoluto do argumento numérico.
+        \\Returns the absolute value of the numeric argument.
     },
     .{
         "sin",
@@ -106,7 +106,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$sin(x)
         \\```
         \\
-        \\Aceita um argumento numérico em radianos e retorna o seu seno.
+        \\Accepts a numeric argument in radians and returns its sine.
     },
     .{
         "cos",
@@ -114,7 +114,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$cos(x)
         \\```
         \\
-        \\Aceita um argumento numérico em radianos e retorna o seu cosseno.
+        \\Accepts a numeric argument in radians and returns its cosine.
     },
     .{
         "prop",
@@ -122,7 +122,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$prop(str)
         \\```
         \\
-        \\Acessa a propriedade do contexto através de uma string.
+        \\Accesses a context property through a string.
         \\
         \\```usrl
         \\$prop('velocidade') == velocidade,
@@ -135,12 +135,12 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$len(lista_str_obj)
         \\```
         \\
-        \\Aceita um argumento de texto, lista ou objeto e retorna seu comprimento.
+        \\Accepts a text, list, or object argument and returns its length.
         \\
         \\```usrl
-        \\$len('abc'), # retorna o número de caracteres no texto
-        \\$len(lista), # retorna o número de elementos na lista
-        \\$len(objeto) # retorna o número de pares contidos no objeto
+        \\$len('abc'), # returns the number of characters in the text
+        \\$len(lista), # returns the number of elements in the list
+        \\$len(objeto) # returns the number of key/value pairs in the object
         \\```
     },
     .{
@@ -149,8 +149,8 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$idx(elem, lista_str)
         \\```
         \\
-        \\Retorna o primeiro índice do primeiro argumento dentro do segundo argumento. `NIL`
-        \\se não encontrado.
+        \\Returns the first index of the first argument within the second argument. `NIL`
+        \\if not found.
         \\
         \\```usrl
         \\$idx('a', 'abcabc') == 0,
@@ -166,8 +166,8 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$lastIdx(elem, lista_str)
         \\```
         \\
-        \\Retorna o último índice do primeiro argumento dentro do segundo argumento. `NIL`
-        \\se não encontrado.
+        \\Returns the last index of the first argument within the second argument. `NIL`
+        \\if not found.
         \\
         \\```usrl
         \\$lastIdx('a', 'abcabc') == 3,
@@ -182,7 +182,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$addList()
         \\```
         \\
-        \\Adiciona uma lista vazia ao contexto e retorna seu valor.
+        \\Adds an empty list to the context and returns its value.
         \\
         \\```usrl
         \\$lista := $addList();
@@ -195,7 +195,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$addObj()
         \\```
         \\
-        \\Adiciona um objeto vazio ao contexto e retorna seu valor.
+        \\Adds an empty object to the context and returns its value.
         \\
         \\```usrl
         \\$objeto := $addObj();
@@ -208,7 +208,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$push(elem, lista)
         \\```
         \\
-        \\Adiciona o primeiro argumento ao final do segundo argumento. Sempre retorna `NIL`.
+        \\Adds the first argument to the end of the second argument. Always returns `NIL`.
         \\
         \\```usrl
         \\$lista := $addList();
@@ -224,7 +224,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$pop(lista)
         \\```
         \\
-        \\Remove e retorna o último elemento do argumento.
+        \\Removes and returns the last element of the argument.
         \\
         \\```usrl
         \\$lista; # [ 'a', 'b', 'c' ]
@@ -240,7 +240,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$slice(str, indice, tamanho)
         \\```
         \\
-        \\Recorta e retorna o primeiro argumento com base nos argumentos seguintes. O segundo argumento é o índice inicial que pode ser negativo. O terceiro argumento é o comprimento do resultado, podendo ser negativo para capturar a string de trás para frente.
+        \\Slices and returns the first argument based on the following arguments. The second argument is the start index and may be negative. The third argument is the length of the result and can be negative to capture the string from back to front.
         \\
         \\```usrl
         \\$slice('abcdef', 1, 2) == 'bc',
@@ -257,7 +257,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$str(x)
         \\```
         \\
-        \\Converte o valor dado em uma string.
+        \\Converts the given value to a string.
     },
     .{
         "num",
@@ -265,7 +265,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$num(x)
         \\```
         \\
-        \\Converte o valor dado em um valor numérico. Somente aceita argumentos textuais ou numéricos.
+        \\Converts the given value to a numeric value. Only accepts text or numeric arguments.
     },
     .{
         "ctx",
@@ -273,7 +273,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$ctx()
         \\```
         \\
-        \\Retorna o contexto como um valor, podendo obter suas propriedades através do operador de acesso.
+        \\Returns the context as a value, allowing its properties to be accessed through the member access operator.
         \\
         \\```usrl
         \\$ctx().velocidade == velocidade,
@@ -286,7 +286,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$fileId(ref)
         \\```
         \\
-        \\Retorna o file id do valor referência como um valor numérico.
+        \\Returns the file ID of the reference value as a numeric value.
     },
     .{
         "guid",
@@ -294,7 +294,7 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$guid(ref)
         \\```
         \\
-        \\Retorna o GUID do valor referência como uma string.
+        \\Returns the GUID of the reference value as a string.
     },
     .{
         "guidOf",
@@ -302,10 +302,10 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$guidOf(path)
         \\```
         \\
-        \\Busca e retorna o GUID do asset em `path`, relativo à raiz do projeto.
+        \\Looks up and returns the GUID of the asset at `path`, relative to the project root.
         \\
         \\```usrl
-        \\$guidOf("./Assets/Prefabs/Player.prefab") == "algum guid"
+        \\$guidOf("./Assets/Prefabs/Player.prefab") == "some guid"
         \\```
     },
     .{
@@ -314,7 +314,12 @@ pub const descriptions = std.StaticStringMap([]const u8).initComptime(.{
         \\$assert(condition)
         \\```
         \\
-        \\Assume que `condition` é verdadeiro e retorna seu valor.
-        \\Caso contrário, interrompe a execução da consulta levantando um erro de asserção.
+        \\Assures that `condition` is true and returns its value.
+        \\Otherwise, it stops query execution by raising an assertion error.
+        \\
+        \\```usrl
+        \\$assert(rb);
+        \\$assert(!rb.m_IsKinematic);
+        \\```
     },
 });
