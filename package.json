@@ -1,45 +1,33 @@
 {
 	"name": "usrl",
-	"description": "The official USRL extension",
-	"icon": "./client/icon.png",
+	"displayName": "USRL Language",
+	"description": "The official USRL extension for Visual Studio Code",
+	"icon": "./icon.png",
 	"version": "0.1.0",
-	"author": "DanielKMach",
 	"publisher": "danielkmach",
+	"author": "DanielKMach",
 	"license": "MIT",
+	"repository": { "url": "https://github.com/DanielKMach/USRL-LSP" },
 	"categories": [],
-	"keywords": [
-		"multi-root ready"
-	],
-	"engines": {
-		"vscode": "^1.100.0"
-	},
-	"activationEvents": [
-		"onLanguage:usrl"
-	],
+	"keywords": [ "multi-root ready" ],
+	"engines": { "vscode": "^1.100.0" },
+	"activationEvents": [ "onLanguage:usrl" ],
 	"main": "./out/extension",
 	"contributes": {
-		"languages": [
-			{
-				"id": "usrl",
-				"aliases": [
-					"USRL"
-				],
-				"extensions": [
-					".usrl"
-				],
-				"icon": {
-					"light": "./client/icon.svg",
-					"dark": "./client/icon.svg"
-				}
+		"languages": [{
+			"id": "usrl",
+			"aliases": [ "USRL" ],
+			"extensions": [ ".usrl" ],
+			"icon": {
+				"light": "./icon.svg",
+				"dark": "./icon.svg"
 			}
-		],
-		"grammars": [
-			{
-				"language": "usrl",
-				"scopeName": "source.usrl",
-				"path": "./client/usrl.tmLanguage.json"
-			}
-		],
+		}],
+		"grammars": [{
+			"language": "usrl",
+			"scopeName": "source.usrl",
+			"path": "./usrl.tmLanguage.json"
+		}],
 		"configuration": {
 			"id": "usrl",
 			"type": "object",
@@ -47,7 +35,7 @@
 			"properties": {
 				"usrl.preferredExecutable": {
 					"type": "string",
-					"description": "Sets the executable to be used when running a query. Defaults to `usrl` when empty.",
+					"description": "The executable to be used when running a query. Defaults to `usrl` when empty.",
 					"default": "usrl"
 				}
 			}
