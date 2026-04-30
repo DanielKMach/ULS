@@ -2,7 +2,7 @@
 	"name": "usrl",
 	"displayName": "USRL Language",
 	"description": "The official USRL extension for Visual Studio Code",
-	"icon": "./assets/icon.png",
+	"icon": "static/icon.png",
 	"version": "0.1.0",
 	"publisher": "danielkmach",
 	"author": "DanielKMach",
@@ -29,17 +29,17 @@
 					".usrl"
 				],
 				"icon": {
-					"light": "./assets/icon.svg",
-					"dark": "./assets/icon.svg"
+					"light": "static/icon.svg",
+					"dark": "static/icon.svg"
 				},
-				"configuration": "./assets/usrl-language-configuration.json"
+				"configuration": "static/usrl-language-configuration.json"
 			}
 		],
 		"grammars": [
 			{
 				"language": "usrl",
 				"scopeName": "source.usrl",
-				"path": "./assets/usrl.tmLanguage.json"
+				"path": "static/usrl.tmLanguage.json"
 			}
 		],
 		"configuration": {

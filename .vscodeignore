@@ -11,5 +11,6 @@ server/
 build.zig
 build.zig.zon
 esbuild.js
+static/*.gif
 tsconfig.json
 tsconfig.tsbuildinfo

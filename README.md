@@ -4,7 +4,11 @@ The official language server for USRL!
 
 ## Features
 
-- Syntax highlighting.
 - Compile-time error diagnostics.
-- Built-in function documentation on hover.
+![](https://raw.githubusercontent.com/DanielKMach/ULS/dev/static/diag.gif)
+
+- Function documentation on hover.
+![](https://raw.githubusercontent.com/DanielKMach/ULS/dev/static/hover.gif)
+
 - Inline query execution.
+![](https://raw.githubusercontent.com/DanielKMach/ULS/dev/static/lens.gif)
