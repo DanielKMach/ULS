@@ -3,6 +3,7 @@ zig-out/
 
 node_modules/
 out/
+dist/
 
 tsconfig.tsbuildinfo
 *.vsix

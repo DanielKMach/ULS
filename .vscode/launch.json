@@ -14,21 +14,7 @@
 				"${workspaceRoot}/out/**/*.js",
 			],
 			"autoAttachChildProcesses": true,
-			"preLaunchTask": "compile-client"
-		},
-		{
-			"name": "Language Server E2E Test",
-			"type": "extensionHost",
-			"request": "launch",
-			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceRoot}",
-				"--extensionTestsPath=${workspaceRoot}/out/test/index",
-				"${workspaceRoot}/client/testFixture"
-			],
-			"outFiles": [
-				"${workspaceRoot}/out/test/**/*.js"
-			]
+			"preLaunchTask": "npm: build"
 		}
 	]
 }

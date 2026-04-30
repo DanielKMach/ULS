@@ -1,6 +1,15 @@
 .vscode/
 .zig-cache/
+node_modules/
 zig-out/
+out/
 
 client/
 server/
+
+.gitignore
+build.zig
+build.zig.zon
+esbuild.js
+tsconfig.json
+tsconfig.tsbuildinfo

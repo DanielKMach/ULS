@@ -2,32 +2,46 @@
 	"name": "usrl",
 	"displayName": "USRL Language",
 	"description": "The official USRL extension for Visual Studio Code",
-	"icon": "./icon.png",
+	"icon": "./assets/icon.png",
 	"version": "0.1.0",
 	"publisher": "danielkmach",
 	"author": "DanielKMach",
 	"license": "MIT",
-	"repository": { "url": "https://github.com/DanielKMach/USRL-LSP" },
+	"repository": {
+		"url": "https://github.com/DanielKMach/ULS"
+	},
 	"categories": [],
-	"keywords": [ "multi-root ready" ],
-	"engines": { "vscode": "^1.100.0" },
-	"activationEvents": [ "onLanguage:usrl" ],
-	"main": "./out/extension",
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.100.0"
+	},
+	"main": "./dist/extension",
 	"contributes": {
-		"languages": [{
-			"id": "usrl",
-			"aliases": [ "USRL" ],
-			"extensions": [ ".usrl" ],
-			"icon": {
-				"light": "./icon.svg",
-				"dark": "./icon.svg"
+		"languages": [
+			{
+				"id": "usrl",
+				"aliases": [
+					"USRL"
+				],
+				"extensions": [
+					".usrl"
+				],
+				"icon": {
+					"light": "./assets/icon.svg",
+					"dark": "./assets/icon.svg"
+				},
+				"configuration": "./assets/usrl-language-configuration.json"
 			}
-		}],
-		"grammars": [{
-			"language": "usrl",
-			"scopeName": "source.usrl",
-			"path": "./usrl.tmLanguage.json"
-		}],
+		],
+		"grammars": [
+			{
+				"language": "usrl",
+				"scopeName": "source.usrl",
+				"path": "./assets/usrl.tmLanguage.json"
+			}
+		],
 		"configuration": {
 			"id": "usrl",
 			"type": "object",
@@ -54,24 +68,20 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -b",
-		"watch": "tsc -b -w",
-		"lint": "eslint",
-		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-		"test": "powershell ./scripts/e2e.ps1"
+		"watch": "tsc --noEmit --watch",
+		"build": "zig build && tsc -b && node esbuild.js",
+		"build:prod": "zig build -Dall --release=small && tsc -b && node esbuild.js --production",
+		"package": "npm run build:prod && vsce package"
 	},
 	"dependencies": {
 		"glob": "^11.0.0",
 		"vscode-languageclient": "^9.0.1"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.6",
 		"@types/node": "^22",
 		"@types/vscode": "^1.100.0",
-		"@vscode/test-electron": "^2.3.9",
-		"js-yaml": "^4.1.1",
-		"mocha": "^10.3.0",
+		"@vscode/vsce": "^3.9.1",
+		"esbuild": "^0.28.0",
 		"typescript": "^5.9.2"
 	}
 }
