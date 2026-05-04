@@ -1,6 +1,6 @@
 # USRL Language Server
 
-The official language server for USRL!
+The officially supported language server for USRL.
 
 ## Features
 
