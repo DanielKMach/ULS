@@ -9,8 +9,8 @@
             .hash = "lsp_kit-0.1.0-bi_PL5wxCgB1_jRIZtcodh-x-_nteVzuOrul2ken-ZLE",
         },
         .usrl = .{
-            .url = "git+https://github.com/DanielKMach/USRL#0605720119eda308636fba555c3c48fa83bc2e66",
-            .hash = "usrl-1.0.1-WmoIjDW5BQBcZcdIMOW3YaqzIvWUuVfpRZGnPAUq1wuS",
+            .url = "git+https://github.com/DanielKMach/USRL?ref=v1.1.0#02c66aed87355de6e09aa1335033d79c112320e8",
+            .hash = "usrl-1.0.1-WmoIjLVLBACaFxLjT3PVI5CcN68H020CjP6g50kB8aJJ",
         },
     },
     .paths = .{
