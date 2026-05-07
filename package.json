@@ -10,7 +10,7 @@
 	"repository": {
 		"url": "https://github.com/DanielKMach/ULS"
 	},
-	"categories": [ "Programming Languages" ],
+	"categories": [ "Programming Languages", "Snippets" ],
 	"keywords": [
 		"multi-root ready"
 	],
@@ -33,6 +33,12 @@
 					"dark": "static/icon.svg"
 				},
 				"configuration": "static/usrl-language-configuration.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": "usrl",
+				"path": "static/snippets.json"
 			}
 		],
 		"grammars": [

@@ -1,0 +1,58 @@
+{
+    "SHOW statement": {
+        "prefix": "show",
+        "body": "SHOW ${1|REFS,USES,DIRECT USES|} OF ${2:Asset};"
+    },
+    "SHOW statement with IN": {
+        "prefix": "showi",
+        "body": "SHOW ${1|REFS,USES,DIRECT USES|} OF ${2:Asset} IN ${3:Folder};"
+    },
+    "SHOW statement with WHERE": {
+        "prefix": "showw",
+        "body": [
+            "SHOW ${1|USES,DIRECT USES|} OF ${2:Component}",
+            "WHERE ${3:condition};"
+        ]
+    },
+    "SHOW statement with IN and WHERE": {
+        "prefix": "showiw",
+        "body": [
+            "SHOW ${1|USES,DIRECT USES|} OF ${2:Component} IN ${3:Folder}",
+            "WHERE ${4:condition};"
+        ]
+    },
+    "RENAME statement": {
+        "prefix": "rename",
+        "body": "RENAME ${1:oldName} FOR ${2:newName} OF ${3:Component};"
+    },
+    "EVAL statement": {
+        "prefix": "eval",
+        "body": [
+            "EVAL ${1:expression}",
+            "OF ${2:Component};"
+        ]
+    },
+    "EVAL statement with IN": {
+        "prefix": "evali",
+        "body": [
+            "EVAL ${1:expression}",
+            "OF ${2:Component} IN ${3:Folder};"
+        ]
+    },
+    "EVAL statement with WHERE": {
+        "prefix": "evalw",
+        "body": [
+            "EVAL ${1:expression}",
+            "OF ${2:Component}",
+            "WHERE ${3:condition};"
+        ]
+    },
+    "EVAL statement with IN and WHERE": {
+        "prefix": "evaliw",
+        "body": [
+            "EVAL ${1:expression}",
+            "OF ${2:Component} IN ${3:Folder}",
+            "WHERE ${4:condition};"
+        ]
+    }
+}
