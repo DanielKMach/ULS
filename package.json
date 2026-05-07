@@ -3,7 +3,7 @@
 	"displayName": "USRL",
 	"description": "USRL support for Visual Studio Code",
 	"icon": "static/icon.png",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "danielkmach",
 	"author": "Daniel Koucher Machado",
 	"license": "MIT",

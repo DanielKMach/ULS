@@ -1,6 +1,6 @@
 .{
     .name = .usrl_lsp,
-    .version = "0.0.0",
+    .version = "1.0.1",
     .fingerprint = 0xc08eca14b4cf56f2,
     .minimum_zig_version = "0.15.1",
     .dependencies = .{
